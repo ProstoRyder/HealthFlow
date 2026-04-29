@@ -5,6 +5,7 @@ import com.healthflow.dto.doctors.DoctorRequestDto;
 import com.healthflow.dto.doctors.DoctorResponseDto;
 import com.healthflow.repository.entity.DoctorEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public interface DoctorMapper {
 
     List<Doctor> toDoctorList(List<DoctorEntity> doctorEntities);
 
+    @Mapping(target = "specialtyId", source = "specialty.id")
+    @Mapping(target = "specialtyName", source = "specialty.name")
     DoctorResponseDto toResponseDto(Doctor doctor);
 
     List<DoctorResponseDto> toResponseDtoList(List<Doctor> doctors);

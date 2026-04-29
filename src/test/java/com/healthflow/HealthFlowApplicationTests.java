@@ -1,7 +1,10 @@
 package com.healthflow;
 
+import com.healthflow.repository.AppointmentRepository;
+import com.healthflow.repository.ConsultationRepository;
 import com.healthflow.repository.DoctorRepository;
 import com.healthflow.repository.PatientRepository;
+import com.healthflow.repository.PrescriptionRepository;
 import com.healthflow.repository.SpecialtyRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +24,15 @@ class HealthFlowApplicationTests {
 
     @MockBean
     private PatientRepository patientRepository;
+
+    @MockBean
+    private AppointmentRepository appointmentRepository;
+
+    @MockBean
+    private ConsultationRepository consultationRepository;
+
+    @MockBean
+    private PrescriptionRepository prescriptionRepository;
 
     @Test
     void contextLoads() {
