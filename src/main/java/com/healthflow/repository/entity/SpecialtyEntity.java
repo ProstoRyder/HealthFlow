@@ -28,7 +28,7 @@ public class SpecialtyEntity {
     @Column(length = 255)
     String description;
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "specialty")
     List<DoctorEntity> doctors = new ArrayList<>();
 }

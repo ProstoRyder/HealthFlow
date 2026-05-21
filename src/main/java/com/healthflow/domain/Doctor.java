@@ -13,5 +13,8 @@ public class Doctor {
     String lastName;
     String email;
     String phoneNumber;
+    DoctorGender gender;
+    DoctorQualification qualification;
     Specialty specialty;
+    Hospital hospital;
 }

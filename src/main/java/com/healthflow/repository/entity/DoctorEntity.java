@@ -1,11 +1,15 @@
 package com.healthflow.repository.entity;
 
+import com.healthflow.domain.DoctorGender;
+import com.healthflow.domain.DoctorQualification;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -32,7 +36,27 @@ public class DoctorEntity {
     @Column(nullable = false, length = 20)
     String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    DoctorGender gender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    DoctorQualification qualification;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "specialty_id", nullable = false)
     SpecialtyEntity specialty;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "hospital_id", nullable = false)
+    HospitalEntity hospital;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "doctor")
+    List<ReviewEntity> reviews = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "doctor")
+    List<DoctorScheduleEntity> schedules = new ArrayList<>();
 }

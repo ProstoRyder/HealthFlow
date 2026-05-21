@@ -13,6 +13,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PatientMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
     PatientEntity toEntity(PatientRequestDto requestDto);
 
     Patient toPatient(PatientEntity patientEntity);
@@ -23,5 +25,7 @@ public interface PatientMapper {
 
     List<PatientResponseDto> toResponseDtoList(List<Patient> patients);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
     void updateEntityFromDto(PatientRequestDto requestDto, @MappingTarget PatientEntity patientEntity);
 }

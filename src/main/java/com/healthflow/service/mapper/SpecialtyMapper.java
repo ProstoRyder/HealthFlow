@@ -5,6 +5,7 @@ import com.healthflow.dto.specialties.SpecialtyRequestDto;
 import com.healthflow.dto.specialties.SpecialtyResponseDto;
 import com.healthflow.repository.entity.SpecialtyEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface SpecialtyMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "doctors", ignore = true)
     SpecialtyEntity toEntity(SpecialtyRequestDto requestDto);
 
     Specialty toSpecialty(SpecialtyEntity specialtyEntity);
@@ -22,5 +25,7 @@ public interface SpecialtyMapper {
 
     List<SpecialtyResponseDto> toResponseDtoList(List<Specialty> specialties);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "doctors", ignore = true)
     void updateEntityFromDto(SpecialtyRequestDto requestDto, @MappingTarget SpecialtyEntity specialtyEntity);
 }

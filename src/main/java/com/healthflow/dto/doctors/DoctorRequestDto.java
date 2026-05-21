@@ -1,5 +1,7 @@
 package com.healthflow.dto.doctors;
 
+import com.healthflow.domain.DoctorGender;
+import com.healthflow.domain.DoctorQualification;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +31,15 @@ public class DoctorRequestDto {
     @Size(max = 20, message = "Phone number must not exceed 20 characters.")
     String phoneNumber;
 
+    @NotNull(message = "Gender is required.")
+    DoctorGender gender;
+
+    @NotNull(message = "Qualification is required.")
+    DoctorQualification qualification;
+
     @NotNull(message = "Specialty id is required.")
     UUID specialtyId;
+
+    @NotNull(message = "Hospital id is required.")
+    UUID hospitalId;
 }

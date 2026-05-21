@@ -4,8 +4,10 @@ import com.healthflow.common.ResourceNotFoundException;
 import com.healthflow.domain.Doctor;
 import com.healthflow.dto.doctors.DoctorRequestDto;
 import com.healthflow.repository.DoctorRepository;
+import com.healthflow.repository.HospitalRepository;
 import com.healthflow.repository.SpecialtyRepository;
 import com.healthflow.repository.entity.DoctorEntity;
+import com.healthflow.repository.entity.HospitalEntity;
 import com.healthflow.repository.entity.SpecialtyEntity;
 import com.healthflow.service.DoctorService;
 import com.healthflow.service.mapper.DoctorMapper;
@@ -22,14 +24,17 @@ public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final SpecialtyRepository specialtyRepository;
+    private final HospitalRepository hospitalRepository;
     private final DoctorMapper doctorMapper;
 
     @Override
     @Transactional
     public Doctor create(DoctorRequestDto requestDto) {
         SpecialtyEntity specialtyEntity = findSpecialtyById(requestDto.getSpecialtyId());
+        HospitalEntity hospitalEntity = findHospitalById(requestDto.getHospitalId());
         DoctorEntity doctorEntity = doctorMapper.toEntity(requestDto);
         doctorEntity.setSpecialty(specialtyEntity);
+        doctorEntity.setHospital(hospitalEntity);
 
         return doctorMapper.toDoctor(doctorRepository.save(doctorEntity));
     }
@@ -51,9 +56,11 @@ public class DoctorServiceImpl implements DoctorService {
     public Doctor update(UUID id, DoctorRequestDto requestDto) {
         DoctorEntity doctorEntity = findDoctorById(id);
         SpecialtyEntity specialtyEntity = findSpecialtyById(requestDto.getSpecialtyId());
+        HospitalEntity hospitalEntity = findHospitalById(requestDto.getHospitalId());
 
         doctorMapper.updateEntityFromDto(requestDto, doctorEntity);
         doctorEntity.setSpecialty(specialtyEntity);
+        doctorEntity.setHospital(hospitalEntity);
 
         return doctorMapper.toDoctor(doctorRepository.save(doctorEntity));
     }
@@ -72,5 +79,10 @@ public class DoctorServiceImpl implements DoctorService {
     private SpecialtyEntity findSpecialtyById(UUID id) {
         return specialtyRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Specialty with id " + id + " not found"));
+    }
+
+    private HospitalEntity findHospitalById(UUID id) {
+        return hospitalRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Hospital with id " + id + " not found"));
     }
 }

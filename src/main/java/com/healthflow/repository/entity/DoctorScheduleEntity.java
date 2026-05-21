@@ -2,49 +2,46 @@ package com.healthflow.repository.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "patients")
+@Table(name = "doctor_schedules")
 @Builder(toBuilder = true)
-public class PatientEntity {
+public class DoctorScheduleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
-    @Column(nullable = false, length = 100)
-    String firstName;
-
-    @Column(nullable = false, length = 100)
-    String lastName;
-
-    @Column(nullable = false, unique = true, length = 100)
-    String email;
-
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    String phoneNumber;
+    DayOfWeek dayOfWeek;
 
     @Column(nullable = false)
-    LocalDate dateOfBirth;
+    LocalTime startTime;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "patient")
-    List<ReviewEntity> reviews = new ArrayList<>();
+    @Column(nullable = false)
+    LocalTime endTime;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    DoctorEntity doctor;
 }
