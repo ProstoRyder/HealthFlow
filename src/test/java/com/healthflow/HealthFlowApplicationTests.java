@@ -9,6 +9,7 @@ import com.healthflow.repository.PatientRepository;
 import com.healthflow.repository.PrescriptionRepository;
 import com.healthflow.repository.ReviewRepository;
 import com.healthflow.repository.SpecialtyRepository;
+import com.healthflow.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -45,6 +46,9 @@ class HealthFlowApplicationTests {
 
     @MockBean
     private ReviewRepository reviewRepository;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @Test
     void contextLoads() {

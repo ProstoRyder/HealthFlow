@@ -12,6 +12,7 @@ public class Patient {
     UUID id;
     String firstName;
     String lastName;
+    String patronymic;
     String email;
     String phoneNumber;
     LocalDate dateOfBirth;

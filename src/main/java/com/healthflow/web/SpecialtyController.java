@@ -8,6 +8,7 @@ import com.healthflow.service.mapper.SpecialtyMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class SpecialtyController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SpecialtyResponseDto> create(@Valid @RequestBody SpecialtyRequestDto requestDto) {
         Specialty specialty = specialtyService.create(requestDto);
         SpecialtyResponseDto responseDto = specialtyMapper.toResponseDto(specialty);
@@ -40,16 +42,19 @@ public class SpecialtyController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<List<SpecialtyResponseDto>> getAll() {
         return ResponseEntity.ok(specialtyMapper.toResponseDtoList(specialtyService.getAll()));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<SpecialtyResponseDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(specialtyMapper.toResponseDto(specialtyService.getById(id)));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SpecialtyResponseDto> update(
             @PathVariable UUID id,
             @Valid @RequestBody SpecialtyRequestDto requestDto
@@ -58,6 +63,7 @@ public class SpecialtyController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         specialtyService.delete(id);
         return ResponseEntity.noContent().build();

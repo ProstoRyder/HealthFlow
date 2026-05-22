@@ -4,9 +4,12 @@ import com.healthflow.repository.entity.AppointmentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public interface AppointmentRepository extends JpaRepository<AppointmentEntity, UUID> {
+
+    List<AppointmentEntity> findByPatient_Id(UUID patientId);
 
     boolean existsByDoctor_IdAndAppointmentDateTime(UUID doctorId, LocalDateTime appointmentDateTime);
 

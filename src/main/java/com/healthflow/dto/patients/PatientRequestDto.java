@@ -22,6 +22,9 @@ public class PatientRequestDto {
     @Size(max = 100, message = "Last name must not exceed 100 characters.")
     String lastName;
 
+    @Size(max = 100, message = "Patronymic must not exceed 100 characters.")
+    String patronymic;
+
     @NotBlank(message = "Email is required.")
     @Email(message = "Email must be valid.")
     @Size(max = 100, message = "Email must not exceed 100 characters.")

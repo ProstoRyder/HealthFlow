@@ -8,6 +8,7 @@ import com.healthflow.service.mapper.DoctorScheduleMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,22 +37,26 @@ public class DoctorScheduleController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DoctorScheduleResponseDto> create(@Valid @RequestBody DoctorScheduleRequestDto requestDto) {
         DoctorSchedule doctorSchedule = doctorScheduleService.create(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(doctorScheduleMapper.toResponseDto(doctorSchedule));
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<List<DoctorScheduleResponseDto>> getAll() {
         return ResponseEntity.ok(doctorScheduleMapper.toResponseDtoList(doctorScheduleService.getAll()));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<DoctorScheduleResponseDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(doctorScheduleMapper.toResponseDto(doctorScheduleService.getById(id)));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DoctorScheduleResponseDto> update(
             @PathVariable UUID id,
             @Valid @RequestBody DoctorScheduleRequestDto requestDto
@@ -60,6 +65,7 @@ public class DoctorScheduleController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         doctorScheduleService.delete(id);
         return ResponseEntity.noContent().build();

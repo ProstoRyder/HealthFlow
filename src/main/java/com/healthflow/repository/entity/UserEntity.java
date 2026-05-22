@@ -1,53 +1,50 @@
 package com.healthflow.repository.entity;
 
+import com.healthflow.domain.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "patients")
+@Table(name = "users")
 @Builder(toBuilder = true)
-public class PatientEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
-    @Column(nullable = false, length = 100)
-    String firstName;
-
-    @Column(nullable = false, length = 100)
-    String lastName;
-
-    @Column(length = 100)
-    String patronymic;
-
     @Column(nullable = false, unique = true, length = 100)
     String email;
 
-    @Column(length = 20)
-    String phoneNumber;
+    @Column(nullable = false)
+    String password;
 
-    @Column
-    LocalDate dateOfBirth;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    UserRole role;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "patient")
-    List<ReviewEntity> reviews = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "patient_id", unique = true)
+    PatientEntity patient;
+
+    @OneToOne
+    @JoinColumn(name = "doctor_id", unique = true)
+    DoctorEntity doctor;
 }
