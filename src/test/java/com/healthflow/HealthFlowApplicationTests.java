@@ -11,6 +11,7 @@ import com.healthflow.repository.RefreshTokenRepository;
 import com.healthflow.repository.ReviewRepository;
 import com.healthflow.repository.SpecialtyRepository;
 import com.healthflow.repository.UserRepository;
+import com.healthflow.service.PdfService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -53,6 +54,9 @@ class HealthFlowApplicationTests {
 
     @MockBean
     private RefreshTokenRepository refreshTokenRepository;
+
+    @MockBean
+    private PdfService pdfService;
 
     @Test
     void contextLoads() {

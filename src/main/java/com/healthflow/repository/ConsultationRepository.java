@@ -10,6 +10,10 @@ public interface ConsultationRepository extends JpaRepository<ConsultationEntity
 
     boolean existsByAppointmentId(UUID appointmentId);
 
+    boolean existsByIdAndAppointment_Patient_Id(UUID consultationId, UUID patientId);
+
+    boolean existsByIdAndAppointment_Doctor_Id(UUID consultationId, UUID doctorId);
+
     List<ConsultationEntity> findByAppointment_Patient_Id(UUID patientId);
 
     List<ConsultationEntity> findByAppointment_Doctor_Id(UUID doctorId);

@@ -1,6 +1,7 @@
 package com.healthflow.web;
 
 import com.healthflow.common.BadRequestException;
+import com.healthflow.common.ResourceNotFoundException;
 import com.healthflow.dto.appointments.AppointmentResponseDto;
 import com.healthflow.dto.consultations.ConsultationResponseDto;
 import com.healthflow.dto.patients.PatientProfileUpdateRequestDto;
@@ -13,11 +14,13 @@ import com.healthflow.repository.PrescriptionRepository;
 import com.healthflow.repository.UserRepository;
 import com.healthflow.repository.entity.PatientEntity;
 import com.healthflow.repository.entity.UserEntity;
+import com.healthflow.service.PdfService;
 import com.healthflow.service.StorageService;
 import com.healthflow.service.mapper.AppointmentMapper;
 import com.healthflow.service.mapper.ConsultationMapper;
 import com.healthflow.service.mapper.PatientMapper;
 import com.healthflow.service.mapper.PrescriptionMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,6 +54,7 @@ public class PatientMeController {
     private final ConsultationMapper consultationMapper;
     private final PatientMapper patientMapper;
     private final PrescriptionMapper prescriptionMapper;
+    private final PdfService pdfService;
     private final StorageService storageService;
 
     public PatientMeController(
@@ -62,6 +67,7 @@ public class PatientMeController {
             ConsultationMapper consultationMapper,
             PatientMapper patientMapper,
             PrescriptionMapper prescriptionMapper,
+            PdfService pdfService,
             StorageService storageService
     ) {
         this.userRepository = userRepository;
@@ -73,6 +79,7 @@ public class PatientMeController {
         this.consultationMapper = consultationMapper;
         this.patientMapper = patientMapper;
         this.prescriptionMapper = prescriptionMapper;
+        this.pdfService = pdfService;
         this.storageService = storageService;
     }
 
@@ -98,6 +105,23 @@ public class PatientMeController {
         return ResponseEntity.ok(prescriptionMapper.toResponseDtoList(
                 prescriptionMapper.toPrescriptionList(prescriptionRepository.findByConsultation_Appointment_Patient_Id(patientId))
         ));
+    }
+
+    @GetMapping(value = "/consultations/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getMyConsultationPdf(
+            Authentication authentication,
+            @PathVariable UUID id
+    ) {
+        UUID patientId = getCurrentPatientId(authentication);
+        if (!consultationRepository.existsByIdAndAppointment_Patient_Id(id, patientId)) {
+            throw new ResourceNotFoundException("Consultation with id " + id + " not found");
+        }
+
+        byte[] pdf = pdfService.generateConsultationPdf(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=consultation-" + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
     @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

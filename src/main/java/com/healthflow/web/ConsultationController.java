@@ -4,9 +4,12 @@ import com.healthflow.domain.Consultation;
 import com.healthflow.dto.consultations.ConsultationRequestDto;
 import com.healthflow.dto.consultations.ConsultationResponseDto;
 import com.healthflow.service.ConsultationService;
+import com.healthflow.service.PdfService;
 import com.healthflow.service.mapper.ConsultationMapper;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,10 +31,16 @@ public class ConsultationController {
 
     private final ConsultationService consultationService;
     private final ConsultationMapper consultationMapper;
+    private final PdfService pdfService;
 
-    public ConsultationController(ConsultationService consultationService, ConsultationMapper consultationMapper) {
+    public ConsultationController(
+            ConsultationService consultationService,
+            ConsultationMapper consultationMapper,
+            PdfService pdfService
+    ) {
         this.consultationService = consultationService;
         this.consultationMapper = consultationMapper;
+        this.pdfService = pdfService;
     }
 
     @PostMapping
@@ -62,5 +71,15 @@ public class ConsultationController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         consultationService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getConsultationPdf(@PathVariable UUID id) {
+        byte[] pdf = pdfService.generateConsultationPdf(id);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=consultation-" + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }
