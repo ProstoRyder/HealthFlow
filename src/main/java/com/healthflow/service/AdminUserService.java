@@ -12,7 +12,7 @@ public interface AdminUserService {
 
     AdminUserResponseDto getUserById(UUID id);
 
-    AdminUserResponseDto updateRole(UUID id, UpdateUserRoleRequestDto requestDto);
+    AdminUserResponseDto updateRole(UUID id, UpdateUserRoleRequestDto requestDto, String currentAdminEmail);
 
-    void delete(UUID id);
+    void delete(UUID id, String currentAdminEmail);
 }

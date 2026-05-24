@@ -14,6 +14,7 @@ public class DoctorResponseDto {
     String firstName;
     String lastName;
     String email;
+    String avatarUrl;
     String phoneNumber;
     DoctorGender gender;
     DoctorQualification qualification;

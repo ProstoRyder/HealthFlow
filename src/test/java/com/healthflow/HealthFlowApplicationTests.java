@@ -7,6 +7,7 @@ import com.healthflow.repository.DoctorScheduleRepository;
 import com.healthflow.repository.HospitalRepository;
 import com.healthflow.repository.PatientRepository;
 import com.healthflow.repository.PrescriptionRepository;
+import com.healthflow.repository.RefreshTokenRepository;
 import com.healthflow.repository.ReviewRepository;
 import com.healthflow.repository.SpecialtyRepository;
 import com.healthflow.repository.UserRepository;
@@ -49,6 +50,9 @@ class HealthFlowApplicationTests {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Test
     void contextLoads() {

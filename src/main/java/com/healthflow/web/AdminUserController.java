@@ -6,6 +6,7 @@ import com.healthflow.service.AdminUserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,14 +42,15 @@ public class AdminUserController {
     @PutMapping("/{id}/role")
     public ResponseEntity<AdminUserResponseDto> updateRole(
             @PathVariable UUID id,
-            @Valid @RequestBody UpdateUserRoleRequestDto requestDto
+            @Valid @RequestBody UpdateUserRoleRequestDto requestDto,
+            Authentication authentication
     ) {
-        return ResponseEntity.ok(adminUserService.updateRole(id, requestDto));
+        return ResponseEntity.ok(adminUserService.updateRole(id, requestDto, authentication.getName()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        adminUserService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable UUID id, Authentication authentication) {
+        adminUserService.delete(id, authentication.getName());
         return ResponseEntity.noContent().build();
     }
 }

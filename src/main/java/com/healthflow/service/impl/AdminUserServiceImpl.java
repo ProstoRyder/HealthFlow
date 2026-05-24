@@ -37,8 +37,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     @Transactional
-    public AdminUserResponseDto updateRole(UUID id, UpdateUserRoleRequestDto requestDto) {
+    public AdminUserResponseDto updateRole(UUID id, UpdateUserRoleRequestDto requestDto, String currentAdminEmail) {
         UserEntity user = findUserById(id);
+        validateLastAdminConstraint(user, requestDto.getRole(), currentAdminEmail);
         validateRoleChange(user, requestDto.getRole());
         user.setRole(requestDto.getRole());
         return toDto(userRepository.save(user));
@@ -46,8 +47,10 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     @Transactional
-    public void delete(UUID id) {
-        userRepository.delete(findUserById(id));
+    public void delete(UUID id, String currentAdminEmail) {
+        UserEntity user = findUserById(id);
+        validateDelete(user, currentAdminEmail);
+        userRepository.delete(user);
     }
 
     private UserEntity findUserById(UUID id) {
@@ -62,6 +65,30 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         if (newRole == UserRole.DOCTOR && user.getDoctor() == null) {
             throw new BadRequestException("Cannot set DOCTOR role: user is not linked to doctor");
+        }
+    }
+
+    private void validateLastAdminConstraint(UserEntity targetUser, UserRole newRole, String currentAdminEmail) {
+        if (targetUser.getRole() != UserRole.ADMIN || newRole == UserRole.ADMIN) {
+            return;
+        }
+
+        if (targetUser.getEmail().equalsIgnoreCase(currentAdminEmail)) {
+            throw new BadRequestException("Admin cannot change own role");
+        }
+
+        if (userRepository.countByRole(UserRole.ADMIN) <= 1) {
+            throw new BadRequestException("Cannot change role of the last admin");
+        }
+    }
+
+    private void validateDelete(UserEntity targetUser, String currentAdminEmail) {
+        if (targetUser.getEmail().equalsIgnoreCase(currentAdminEmail)) {
+            throw new BadRequestException("Admin cannot delete own account");
+        }
+
+        if (targetUser.getRole() == UserRole.ADMIN && userRepository.countByRole(UserRole.ADMIN) <= 1) {
+            throw new BadRequestException("Cannot delete the last admin");
         }
     }
 

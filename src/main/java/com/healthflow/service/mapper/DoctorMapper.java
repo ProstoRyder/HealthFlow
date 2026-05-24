@@ -14,6 +14,8 @@ import java.util.List;
 public interface DoctorMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "avatarUrl", ignore = true)
+    @Mapping(target = "avatarKey", ignore = true)
     @Mapping(target = "specialty", ignore = true)
     @Mapping(target = "hospital", ignore = true)
     @Mapping(target = "reviews", ignore = true)
@@ -33,6 +35,8 @@ public interface DoctorMapper {
     List<DoctorResponseDto> toResponseDtoList(List<Doctor> doctors);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "avatarUrl", ignore = true)
+    @Mapping(target = "avatarKey", ignore = true)
     @Mapping(target = "specialty", ignore = true)
     @Mapping(target = "hospital", ignore = true)
     @Mapping(target = "reviews", ignore = true)

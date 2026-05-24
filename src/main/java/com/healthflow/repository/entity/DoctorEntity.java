@@ -33,6 +33,12 @@ public class DoctorEntity {
     @Column(nullable = false, unique = true, length = 100)
     String email;
 
+    @Column(length = 500)
+    String avatarUrl;
+
+    @Column(length = 500)
+    String avatarKey;
+
     @Column(nullable = false, length = 20)
     String phoneNumber;
 

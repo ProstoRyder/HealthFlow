@@ -41,6 +41,12 @@ public class PatientEntity {
     @Column(nullable = false, unique = true, length = 100)
     String email;
 
+    @Column(length = 500)
+    String avatarUrl;
+
+    @Column(length = 500)
+    String avatarKey;
+
     @Column(length = 20)
     String phoneNumber;
 

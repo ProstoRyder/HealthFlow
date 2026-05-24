@@ -7,7 +7,8 @@ import lombok.Value;
 @Value
 @Builder
 public class AuthResponseDto {
-    String token;
+    String accessToken;
+    String refreshToken;
     String tokenType;
     String email;
     UserRole role;

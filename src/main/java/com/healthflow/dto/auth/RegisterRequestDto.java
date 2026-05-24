@@ -3,7 +3,6 @@ package com.healthflow.dto.auth;
 import com.healthflow.domain.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
@@ -23,7 +22,6 @@ public class RegisterRequestDto {
     @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters.")
     String password;
 
-    @NotNull(message = "Role is required.")
     UserRole role;
 
     @Size(max = 100, message = "First name must not exceed 100 characters.")

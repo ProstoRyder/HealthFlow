@@ -14,6 +14,8 @@ import java.util.List;
 public interface PatientMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "avatarUrl", ignore = true)
+    @Mapping(target = "avatarKey", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     PatientEntity toEntity(PatientRequestDto requestDto);
 
@@ -26,6 +28,8 @@ public interface PatientMapper {
     List<PatientResponseDto> toResponseDtoList(List<Patient> patients);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "avatarUrl", ignore = true)
+    @Mapping(target = "avatarKey", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     void updateEntityFromDto(PatientRequestDto requestDto, @MappingTarget PatientEntity patientEntity);
 }

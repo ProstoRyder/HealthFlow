@@ -14,6 +14,7 @@ public class PatientResponseDto {
     String lastName;
     String patronymic;
     String email;
+    String avatarUrl;
     String phoneNumber;
     LocalDate dateOfBirth;
 }
