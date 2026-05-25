@@ -2,6 +2,8 @@ package com.healthflow.service.impl;
 
 import com.healthflow.common.ResourceNotFoundException;
 import com.healthflow.domain.Review;
+import com.healthflow.dto.reviews.DoctorReviewsResponseDto;
+import com.healthflow.dto.reviews.ReviewResponseDto;
 import com.healthflow.dto.reviews.ReviewRequestDto;
 import com.healthflow.repository.DoctorRepository;
 import com.healthflow.repository.PatientRepository;
@@ -44,6 +46,31 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public List<Review> getAll() {
         return reviewMapper.toReviewList(reviewRepository.findAll());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DoctorReviewsResponseDto getByDoctorId(UUID doctorId) {
+        findDoctorById(doctorId);
+
+        List<Review> reviews = reviewMapper.toReviewList(reviewRepository.findByDoctor_Id(doctorId));
+        List<ReviewResponseDto> reviewDtos = reviewMapper.toResponseDtoList(reviews);
+
+        double average = 0.0;
+        if (!reviews.isEmpty()) {
+            average = reviews.stream()
+                    .mapToInt(Review::getRating)
+                    .average()
+                    .orElse(0.0);
+            average = Math.round(average * 100.0) / 100.0;
+        }
+
+        return DoctorReviewsResponseDto.builder()
+                .doctorId(doctorId)
+                .averageRating(average)
+                .totalReviews(reviews.size())
+                .reviews(reviewDtos)
+                .build();
     }
 
     @Override

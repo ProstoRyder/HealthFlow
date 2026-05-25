@@ -1,6 +1,7 @@
 package com.healthflow.service;
 
 import com.healthflow.domain.Review;
+import com.healthflow.dto.reviews.DoctorReviewsResponseDto;
 import com.healthflow.dto.reviews.ReviewRequestDto;
 
 import java.util.List;
@@ -11,6 +12,8 @@ public interface ReviewService {
     Review create(ReviewRequestDto requestDto);
 
     List<Review> getAll();
+
+    DoctorReviewsResponseDto getByDoctorId(UUID doctorId);
 
     Review getById(UUID id);
 

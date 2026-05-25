@@ -87,6 +87,12 @@ public class DoctorMeController {
         ));
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<DoctorResponseDto> getMyProfile(Authentication authentication) {
+        DoctorEntity doctor = getCurrentDoctor(authentication);
+        return ResponseEntity.ok(doctorMapper.toResponseDto(doctorMapper.toDoctor(doctor)));
+    }
+
     @GetMapping("/consultations")
     public ResponseEntity<List<ConsultationResponseDto>> getMyConsultations(Authentication authentication) {
         UUID doctorId = getCurrentDoctorId(authentication);

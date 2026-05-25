@@ -42,13 +42,11 @@ public class SpecialtyController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<List<SpecialtyResponseDto>> getAll() {
         return ResponseEntity.ok(specialtyMapper.toResponseDtoList(specialtyService.getAll()));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<SpecialtyResponseDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(specialtyMapper.toResponseDto(specialtyService.getById(id)));
     }

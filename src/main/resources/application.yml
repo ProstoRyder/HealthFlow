@@ -31,3 +31,8 @@ aws:
   secret-key: ${AWS_SECRET_KEY:test}
   s3:
     bucket: ${AWS_S3_BUCKET:healthflow-avatars}
+
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: ${GEMINI_MODEL:gemini-1.5-flash}
+  base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com/v1beta}

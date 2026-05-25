@@ -12,6 +12,8 @@ public interface DoctorService {
 
     List<Doctor> getAll();
 
+    List<Doctor> search(String query);
+
     Doctor getById(UUID id);
 
     Doctor update(UUID id, DoctorRequestDto requestDto);

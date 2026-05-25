@@ -18,6 +18,7 @@ public interface PrescriptionMapper {
     PrescriptionEntity toEntity(PrescriptionRequestDto requestDto);
 
     @Mapping(target = "consultationId", source = "consultation.id")
+    @Mapping(target = "purchaseUrl", ignore = true)
     @Mapping(target = "patientId", source = "consultation.appointment.patient.id")
     @Mapping(target = "patientFullName", expression = "java(prescriptionEntity.getConsultation().getAppointment().getPatient().getFirstName() + \" \" + prescriptionEntity.getConsultation().getAppointment().getPatient().getLastName())")
     @Mapping(target = "doctorId", source = "consultation.appointment.doctor.id")

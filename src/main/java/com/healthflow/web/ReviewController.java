@@ -1,6 +1,7 @@
 package com.healthflow.web;
 
 import com.healthflow.domain.Review;
+import com.healthflow.dto.reviews.DoctorReviewsResponseDto;
 import com.healthflow.dto.reviews.ReviewRequestDto;
 import com.healthflow.dto.reviews.ReviewResponseDto;
 import com.healthflow.service.ReviewService;
@@ -23,7 +24,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/reviews")
-@PreAuthorize("hasRole('ADMIN')")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -35,22 +35,31 @@ public class ReviewController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReviewResponseDto> create(@Valid @RequestBody ReviewRequestDto requestDto) {
         Review review = reviewService.create(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewMapper.toResponseDto(review));
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ReviewResponseDto>> getAll() {
         return ResponseEntity.ok(reviewMapper.toResponseDtoList(reviewService.getAll()));
     }
 
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<DoctorReviewsResponseDto> getByDoctor(@PathVariable UUID doctorId) {
+        return ResponseEntity.ok(reviewService.getByDoctorId(doctorId));
+    }
+
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReviewResponseDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(reviewMapper.toResponseDto(reviewService.getById(id)));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReviewResponseDto> update(
             @PathVariable UUID id,
             @Valid @RequestBody ReviewRequestDto requestDto
@@ -59,6 +68,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         reviewService.delete(id);
         return ResponseEntity.noContent().build();

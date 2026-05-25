@@ -13,12 +13,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class PrescriptionServiceImpl implements PrescriptionService {
+
+    private static final String TABLETKI_SEARCH_URL = "https://tabletki.ua/uk/search/";
 
     private final PrescriptionRepository prescriptionRepository;
     private final ConsultationRepository consultationRepository;
@@ -32,19 +37,24 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         PrescriptionEntity prescriptionEntity = prescriptionMapper.toEntity(requestDto);
         prescriptionEntity.setConsultation(consultationEntity);
 
-        return prescriptionMapper.toPrescription(prescriptionRepository.save(prescriptionEntity));
+        return enrichWithPurchaseUrl(prescriptionMapper.toPrescription(prescriptionRepository.save(prescriptionEntity)));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Prescription> getAll() {
-        return prescriptionMapper.toPrescriptionList(prescriptionRepository.findAll());
+        List<Prescription> prescriptions = prescriptionMapper.toPrescriptionList(prescriptionRepository.findAll());
+        List<Prescription> enriched = new ArrayList<>(prescriptions.size());
+        for (Prescription prescription : prescriptions) {
+            enriched.add(enrichWithPurchaseUrl(prescription));
+        }
+        return enriched;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Prescription getById(UUID id) {
-        return prescriptionMapper.toPrescription(findPrescriptionById(id));
+        return enrichWithPurchaseUrl(prescriptionMapper.toPrescription(findPrescriptionById(id)));
     }
 
     @Override
@@ -56,7 +66,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         prescriptionMapper.updateEntityFromDto(requestDto, prescriptionEntity);
         prescriptionEntity.setConsultation(consultationEntity);
 
-        return prescriptionMapper.toPrescription(prescriptionRepository.save(prescriptionEntity));
+        return enrichWithPurchaseUrl(prescriptionMapper.toPrescription(prescriptionRepository.save(prescriptionEntity)));
     }
 
     @Override
@@ -73,5 +83,19 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     private ConsultationEntity findConsultationById(UUID id) {
         return consultationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consultation with id " + id + " not found"));
+    }
+
+    private Prescription enrichWithPurchaseUrl(Prescription prescription) {
+        return prescription.toBuilder()
+                .purchaseUrl(buildTabletkiSearchUrl(prescription.getMedicineName()))
+                .build();
+    }
+
+    private String buildTabletkiSearchUrl(String medicineName) {
+        String normalizedName = medicineName == null ? "" : medicineName.trim();
+        if (normalizedName.isEmpty()) {
+            return TABLETKI_SEARCH_URL;
+        }
+        return TABLETKI_SEARCH_URL + URLEncoder.encode(normalizedName, StandardCharsets.UTF_8);
     }
 }

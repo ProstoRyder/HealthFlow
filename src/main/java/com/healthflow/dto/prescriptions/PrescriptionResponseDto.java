@@ -10,6 +10,7 @@ import java.util.UUID;
 public class PrescriptionResponseDto {
     UUID id;
     String medicineName;
+    String purchaseUrl;
     String dosage;
     String instructions;
     Integer durationDays;

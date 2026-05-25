@@ -91,6 +91,12 @@ public class PatientMeController {
         ));
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<PatientResponseDto> getMyProfile(Authentication authentication) {
+        PatientEntity patient = getCurrentPatient(authentication);
+        return ResponseEntity.ok(patientMapper.toResponseDto(patientMapper.toPatient(patient)));
+    }
+
     @GetMapping("/consultations")
     public ResponseEntity<List<ConsultationResponseDto>> getMyConsultations(Authentication authentication) {
         UUID patientId = getCurrentPatientId(authentication);

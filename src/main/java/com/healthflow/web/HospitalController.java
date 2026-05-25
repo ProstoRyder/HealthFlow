@@ -41,13 +41,11 @@ public class HospitalController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<List<HospitalResponseDto>> getAll() {
         return ResponseEntity.ok(hospitalMapper.toResponseDtoList(hospitalService.getAll()));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<HospitalResponseDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(hospitalMapper.toResponseDto(hospitalService.getById(id)));
     }

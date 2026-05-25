@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -41,13 +42,13 @@ public class DoctorController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
-    public ResponseEntity<List<DoctorResponseDto>> getAll() {
-        return ResponseEntity.ok(doctorMapper.toResponseDtoList(doctorService.getAll()));
+    public ResponseEntity<List<DoctorResponseDto>> getAll(
+            @RequestParam(required = false, name = "q") String query
+    ) {
+        return ResponseEntity.ok(doctorMapper.toResponseDtoList(doctorService.search(query)));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     public ResponseEntity<DoctorResponseDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(doctorMapper.toResponseDto(doctorService.getById(id)));
     }
