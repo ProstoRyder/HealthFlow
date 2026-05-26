@@ -11,6 +11,8 @@ public interface ReviewService {
 
     Review create(ReviewRequestDto requestDto);
 
+    Review createAsPatient(String currentUserEmail, ReviewRequestDto requestDto);
+
     List<Review> getAll();
 
     DoctorReviewsResponseDto getByDoctorId(UUID doctorId);

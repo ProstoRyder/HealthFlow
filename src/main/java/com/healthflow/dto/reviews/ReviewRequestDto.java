@@ -21,7 +21,6 @@ public class ReviewRequestDto {
     @Size(max = 1000, message = "Comment must not exceed 1000 characters.")
     String comment;
 
-    @NotNull(message = "Patient id is required.")
     UUID patientId;
 
     @NotNull(message = "Doctor id is required.")

@@ -18,13 +18,11 @@ public class AppointmentRequestDto {
     @FutureOrPresent(message = "Appointment date and time must be in the present or future.")
     LocalDateTime appointmentDateTime;
 
-    @NotNull(message = "Status is required.")
     AppointmentStatus status;
 
     @Size(max = 500, message = "Reason must not exceed 500 characters.")
     String reason;
 
-    @NotNull(message = "Patient id is required.")
     UUID patientId;
 
     @NotNull(message = "Doctor id is required.")

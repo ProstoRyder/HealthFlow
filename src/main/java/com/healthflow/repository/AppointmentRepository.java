@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import com.healthflow.domain.AppointmentStatus;
 
 public interface AppointmentRepository extends JpaRepository<AppointmentEntity, UUID> {
 
@@ -19,5 +20,24 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
             UUID doctorId,
             LocalDateTime appointmentDateTime,
             UUID id
+    );
+
+    boolean existsByDoctor_IdAndAppointmentDateTimeAndStatusIn(
+            UUID doctorId,
+            LocalDateTime appointmentDateTime,
+            List<AppointmentStatus> statuses
+    );
+
+    boolean existsByDoctor_IdAndAppointmentDateTimeAndIdNotAndStatusIn(
+            UUID doctorId,
+            LocalDateTime appointmentDateTime,
+            UUID id,
+            List<AppointmentStatus> statuses
+    );
+
+    boolean existsByPatient_IdAndDoctor_IdAndStatus(
+            UUID patientId,
+            UUID doctorId,
+            com.healthflow.domain.AppointmentStatus status
     );
 }
